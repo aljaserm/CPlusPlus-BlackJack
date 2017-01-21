@@ -1,0 +1,726 @@
+#include<iostream>
+#include<string>
+#include <cstdlib>
+#include <ctime>
+#include<iomanip>
+#include<stdlib.h>//contains code for random number generator
+#include<time.h>//contains code for access to system time
+using namespace std;
+class play_cards
+{
+public:
+	void play_cards::load();
+	play_cards::play_cards();
+	void play_cards::gameStatus();
+	void play_cards::printdeck();
+	void play_cards::deal();
+	void play_cards::start();
+	void play_cards::play();
+	void play_cards::Hit();
+	void play_cards::checkDealer();
+	void play_cards::checkWinner();
+	void play_cards::printResult();
+	void play_cards::newGame();
+
+private:
+	struct deck
+	{
+		string card_name;
+		string card_type;
+		int card_value;
+		bool dealt;
+	};
+	deck card[52];
+	int i;
+	time_t sys_time;
+	int card_count;
+	int card_flag;
+	int deck_position;
+	int count = 0;
+	string player;
+	bool result = 0, dealerResult = 0;
+	int playerCard = 0, dealerCard = 0, newCard = 0, newDCard = 0, dPos,
+		playerTotal = 0, dealerTotal = 0, totalGames = 0, playerWin = 0, dealerWin = 0, tie=0;
+	bool cflag = 0, bust = false, dbust = false;
+	char hit = 'h';
+	int tempCard, tempDCard;
+	double PlayerWinP = 0.0;
+	char more = 'y';
+};
+
+int main()
+{
+	play_cards value;
+	char more = 'y';
+
+
+	while (more == 'y')
+	{
+		value.gameStatus();
+		value.load();
+		value.play();
+		value.checkWinner();
+		value.printResult();
+		do {
+
+			cout << setw(50) << "do you want to play again??" << endl;
+			cout << setw(52) << "(enter only y/n) \a ";
+			cin.clear();
+			cin.ignore();
+			cin >> more;
+
+
+		} while (more != 'y' && more != 'n');
+
+
+
+		value.newGame();
+	}
+
+	system("pause");
+	return 0;
+}
+void play_cards::printResult()
+{
+	system("pause");
+	if (result == 1)
+	{
+		playerWin = playerWin + 1;
+
+	}
+	if (result == 0)
+	{
+		dealerWin = dealerWin + 1;
+	}
+	if (result == 2)
+	{
+		tie = tie + 1;
+	}
+	if (totalGames>0)
+	{
+		PlayerWinP = playerWin*1.0 / totalGames;
+
+	}
+	system("cls");
+	cout << endl << endl;
+	cout << setw(50) << "THE RESULT OF PLAYING WITH LUCILLE" << endl;
+	cout << endl;
+	cout << endl << setw(42) << "Player: " << player << endl;
+	cout << setw(40) << "The current score is: " << playerWin << " wins for " << player << "." << endl;
+	cout << setw(41) << dealerWin << setw(15) << " wins for LUCILLE." << endl;
+	cout << setw(41) << tie << setw(10) << "Ties." << endl;
+	cout << endl;
+	cout << setw(40) << "You have played " << totalGames << " games so far " << endl;
+	cout << setw(40) << "The player has won " << setprecision(2) << fixed << showpoint << PlayerWinP << " % " << " of games. " << endl;
+
+	cout << endl;
+	cout << setw(45) << "Were LUCILLE THIRSTY??" << endl;
+	system("pause");
+}
+
+void play_cards::newGame()
+{
+	if (more == 'y')
+	{
+		playerTotal = 0;
+		dealerTotal = 0;
+		result = 0;
+		dealerResult = 0;
+		playerCard = 0;
+		dealerCard = 0;
+		newCard = 0;
+		newDCard = 0;
+		cflag = 0, bust = false, dbust = false;
+	}
+}
+
+void play_cards::load()
+{
+	card[0].card_name = "TWO";
+	card[0].card_type = "heart";
+	card[0].card_value = 2;
+	card[0].dealt = false;
+	card[1].card_name = "THREE";
+	card[1].card_type = "heart";
+	card[1].card_value = 3;
+	card[1].dealt = false;
+	card[2].card_name = "FOUR";
+	card[2].card_type = "heart";
+	card[2].card_value = 4;
+	card[2].dealt = false;
+	card[3].card_name = "FIVE";
+	card[3].card_type = "heart";
+	card[3].card_value = 5;
+	card[3].dealt = false;
+	card[4].card_name = "SIX";
+	card[4].card_type = "heart";
+	card[4].card_value = 6;
+	card[4].dealt = false;
+	card[5].card_name = "SEVEN";
+	card[5].card_type = "heart";
+	card[5].card_value = 7;
+	card[5].dealt = false;
+	card[6].card_name = "EIGHT";
+	card[6].card_type = "heart";
+	card[6].card_value = 8;
+	card[6].dealt = false;
+	card[7].card_name = "NINE";
+	card[7].card_type = "heart";
+	card[7].card_value = 9;
+	card[7].dealt = false;
+	card[8].card_name = "TEN";
+	card[8].card_type = "heart";
+	card[8].card_value = 10;
+	card[8].dealt = false;
+	card[9].card_name = "ACE";
+	card[9].card_type = "heart";
+	card[9].card_value = 1;
+	card[9].dealt = false;
+	card[10].card_name = "JACK";
+	card[10].card_type = "heart";
+	card[10].card_value = 10;
+	card[10].dealt = false;
+	card[11].card_name = "QUEEN";
+	card[11].card_type = "heart";
+	card[11].card_value = 10;
+	card[11].dealt = false;
+	card[12].card_name = "KING";
+	card[12].card_type = "heart";
+	card[12].card_value = 10;
+	card[12].dealt = false;
+
+	card[13].card_name = "TWO";
+	card[13].card_type = "diamond";
+	card[13].card_value = 2;
+	card[13].dealt = false;
+	card[14].card_name = "THREE";
+	card[14].card_type = "diamond";
+	card[14].card_value = 3;
+	card[14].dealt = false;
+	card[15].card_name = "FOUR";
+	card[15].card_type = "diamond";
+	card[15].card_value = 4;
+	card[15].dealt = false;
+	card[16].card_name = "FIVE";
+	card[16].card_type = "diamond";
+	card[16].card_value = 5;
+	card[16].dealt = false;
+	card[17].card_name = "SIX";
+	card[17].card_type = "diamond";
+	card[17].card_value = 6;
+	card[17].dealt = false;
+	card[18].card_name = "SEVEN";
+	card[18].card_type = "diamond";
+	card[18].card_value = 7;
+	card[18].dealt = false;
+	card[19].card_name = "EIGHT";
+	card[19].card_type = "diamond";
+	card[19].card_value = 8;
+	card[19].dealt = false;
+	card[20].card_name = "NINE";
+	card[20].card_type = "diamond";
+	card[20].card_value = 9;
+	card[20].dealt = false;
+	card[21].card_name = "TEN";
+	card[21].card_type = "diamond";
+	card[21].card_value = 10;
+	card[21].dealt = false;
+	card[22].card_name = "ACE";
+	card[22].card_type = "diamond";
+	card[22].card_value = 1;
+	card[22].dealt = false;
+	card[23].card_name = "JACK";
+	card[23].card_type = "diamond";
+	card[23].card_value = 10;
+	card[23].dealt = false;
+	card[24].card_name = "QUEEN";
+	card[24].card_type = "diamond";
+	card[24].card_value = 10;
+	card[24].dealt = false;
+	card[25].card_name = "KING";
+	card[25].card_type = "diamond";
+	card[25].card_value = 10;
+	card[25].dealt = false;
+
+	card[26].card_name = "TWO";
+	card[26].card_type = "spade";
+	card[26].card_value = 2;
+	card[26].dealt = false;
+	card[27].card_name = "THREE";
+	card[27].card_type = "spade";
+	card[27].card_value = 3;
+	card[27].dealt = false;
+	card[28].card_name = "FOUR";
+	card[28].card_type = "spade";
+	card[28].card_value = 4;
+	card[28].dealt = false;
+	card[29].card_name = "FIVE";
+	card[29].card_type = "spade";
+	card[29].card_value = 5;
+	card[29].dealt = false;
+	card[30].card_name = "SIX";
+	card[30].card_type = "spade";
+	card[30].card_value = 6;
+	card[30].dealt = false;
+	card[31].card_name = "SEVEN";
+	card[31].card_type = "spade";
+	card[31].card_value = 7;
+	card[31].dealt = false;
+	card[32].card_name = "EIGHT";
+	card[32].card_type = "spade";
+	card[32].card_value = 8;
+	card[32].dealt = false;
+	card[33].card_name = "NINE";
+	card[33].card_type = "spade";
+	card[33].card_value = 9;
+	card[33].dealt = false;
+	card[34].card_name = "TEN";
+	card[34].card_type = "spade";
+	card[34].card_value = 10;
+	card[34].dealt = false;
+	card[35].card_name = "ACE";
+	card[35].card_type = "spade";
+	card[35].card_value = 1;
+	card[35].dealt = false;
+	card[36].card_name = "JACK";
+	card[36].card_type = "spade";
+	card[36].card_value = 10;
+	card[36].dealt = false;
+	card[37].card_name = "QUEEN";
+	card[37].card_type = "spade";
+	card[37].card_value = 10;
+	card[37].dealt = false;
+	card[38].card_name = "KING";
+	card[38].card_type = "spade";
+	card[38].card_value = 10;
+	card[38].dealt = false;
+
+	card[39].card_name = "TWO";
+	card[39].card_type = "club";
+	card[39].card_value = 2;
+	card[39].dealt = false;
+	card[40].card_name = "THREE";
+	card[40].card_type = "club";
+	card[40].card_value = 3;
+	card[40].dealt = false;
+	card[41].card_name = "FOUR";
+	card[41].card_type = "club";
+	card[41].card_value = 4;
+	card[41].dealt = false;
+	card[42].card_name = "FIVE";
+	card[42].card_type = "club";
+	card[42].card_value = 5;
+	card[42].dealt = false;
+	card[43].card_name = "SIX";
+	card[43].card_type = "club";
+	card[43].card_value = 6;
+	card[43].dealt = false;
+	card[44].card_name = "SEVEN";
+	card[44].card_type = "club";
+	card[44].card_value = 7;
+	card[44].dealt = false;
+	card[45].card_name = "EIGHT";
+	card[45].card_type = "club";
+	card[45].card_value = 8;
+	card[45].dealt = false;
+	card[46].card_name = "NINE";
+	card[46].card_type = "club";
+	card[46].card_value = 9;
+	card[46].dealt = false;
+	card[47].card_name = "TEN";
+	card[47].card_type = "club";
+	card[47].card_value = 10;
+	card[47].dealt = false;
+	card[48].card_name = "ACE";
+	card[48].card_type = "club";
+	card[48].card_value = 1;
+	card[48].dealt = false;
+	card[49].card_name = "JACK";
+	card[49].card_type = "club";
+	card[49].card_value = 10;
+	card[49].dealt = false;
+	card[50].card_name = "QUEEN";
+	card[50].card_type = "club";
+	card[50].card_value = 10;
+	card[50].dealt = false;
+	card[51].card_name = "KING";
+	card[51].card_type = "club";
+	card[51].card_value = 10;
+	card[51].dealt = false;
+}
+
+void play_cards::printdeck()
+{
+	//loop to print all cards
+	for (i = 0; i <= 51; ++i)
+	{
+		if ((i == 13) || (i == 26) || (i == 39))
+			cout << endl;
+		//cout << card[i].card_name << " " << card[i].card_type << " " << card[i].card_value << " " + card[i].dealt << endl;
+	}//for loop
+}
+
+void play_cards::gameStatus()
+{
+	if (totalGames == 0)
+	{
+		play_cards::start();
+	}
+
+}
+void play_cards::deal()
+{
+	int num;
+	time(&sys_time);
+	srand((unsigned int)sys_time);
+	card_flag = 0;
+
+	while (card_flag != 1)
+	{
+		srand((unsigned int)sys_time);
+		num = rand();
+		while (num>52)
+		{
+			num = num - 52;
+		}
+		deck_position = num;
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			card_flag = 1;
+		}
+
+		cout << card[num].card_name << " " << card[num].card_type << " " << card[num].card_value << endl;
+		card_count = card_count + 1;
+	}
+}
+void play_cards::checkWinner()
+{
+	if (bust == false && dbust == false)
+	{
+		if (playerTotal>dealerTotal)
+		{
+			cout << "You scored higher than Lucille and broke it, so you won!" << endl;
+			result = 1;
+		}
+		if (dealerTotal>playerTotal)
+		{
+			cout << "Lucille's score was higher. Your head is cracked by Lucille and your eyes poped out." << endl;
+			dealerResult = 0;
+		}
+	}
+
+	if (dbust == true)
+	{
+		cout << "The dealer busted. Lucille is broken!" << endl;
+		result = 1;
+	}
+	if (bust == true)
+	{
+		cout << "You busted! Your head is cracked!" << endl;
+		if (dbust == false)
+		{
+			result = 0;
+		}
+	}
+
+	if (playerTotal == dealerTotal)
+	{
+		cout << "It's a tie, nobody wins!" << endl;
+		result = 2;
+	}
+	if (bust == true && dbust == true)
+	{
+		cout << "You both busted.  Lucille is not thirsty" << endl;
+		result = 2;
+	}
+
+	if (count >= 37)
+	{
+		cout << "Deck is reshuffled..." << endl;
+		for (i = 0; i <= 51; i++)
+		{
+			card[i].dealt = false;
+		}
+		count = 0;
+	}
+	totalGames = totalGames + 1;
+	cout << totalGames << " game played" << endl;
+}
+
+play_cards::play_cards()
+{
+	card_count = 0;
+}
+
+void play_cards::start()
+{
+
+	cout << "Enter your name: ";
+	cin >> player;
+	cout << endl;
+	cout << setw(20) << "HI " << player << endl << endl;
+	cout << "	ARE YOU READY TO BEAT LUCILLE??" << endl;
+	cout << "Be CAREFULL if LUCILLE is THIRSTY She is a VAMPIRE BAT " << endl;
+	cout << endl << endl;
+	cout << "	The Rules to Play Blackjack with LUCILLE: " << endl << endl;
+	cout << "1.You Need to Be in Age of 18" << endl;
+	cout << "2.You Will Start With Two Cards First." << endl;
+	cout << "3.You won't See LUCILLE Cards, but the First One." << endl;
+	cout << "4.You Will Have a Value of Each Card." << endl;
+	cout << "5.You Will Have The Option to Top or Hit." << endl;
+	cout << "6.your cards need not to pass 21." << endl << endl;
+	system("pause");
+	system("cls");
+}
+
+void play_cards::play()
+{
+	//first card draw
+	//player Random
+	while (cflag != 1)
+	{
+		rand();
+		srand(time(0));
+		newCard = (rand() % 51) + 1;
+		deck_position = newCard;
+
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			cflag = 1;
+		}
+		tempCard = newCard;
+		count = count + 1;
+	}
+	cflag = 0;
+
+	//dealer random
+	while (cflag != 1)
+	{
+		rand();
+		srand(time(0));
+		newDCard = (rand() % 51) + 1;
+		deck_position = newDCard;
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			cflag = 1;
+		}
+		tempDCard = newDCard;
+		count = count + 1;
+	}
+	cflag = 0;
+
+	cout << endl << endl;
+	cout << "Your first card is a " << card[tempCard].card_name << " of " << card[tempCard].card_type << " the card value is " << card[tempCard].card_value << endl;
+	cout << "Lucille has the card " << card[tempDCard].card_name << " of " << card[tempDCard].card_type << " the card value is " << card[tempDCard].card_value << endl;
+	playerTotal = playerTotal + card[tempCard].card_value;
+	dealerTotal = dealerTotal + card[tempDCard].card_value;
+	//second card draw
+	//player Random
+	while (cflag != 1)
+	{
+		rand();
+		srand(time(0));
+		newCard = (rand() % 51) + 1;
+		deck_position = newCard;
+
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			cflag = 1;
+		}
+		tempCard = newCard;
+		count = count + 1;
+	}
+	//dealer random
+	while (cflag != 1)
+	{
+		rand();
+		srand(time(0));
+		newDCard = (rand() % 51) + 1;
+		deck_position = newDCard;
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			cflag = 1;
+		}
+		tempDCard = newDCard;
+		count = count + 1;
+	}
+
+
+	cflag = 0;
+	cout << endl << endl;
+	cout << "Your second card is a " << card[tempCard].card_name << " of " << card[tempCard].card_type << " the card value is " << card[tempCard].card_value << endl;
+	cout << "Lucille has a hidden card now" << endl;
+
+	playerTotal = playerTotal + card[tempCard].card_value;
+	cout << playerTotal << endl;
+	dealerTotal = dealerTotal + card[tempDCard].card_value;
+	play_cards::Hit();
+}
+
+void play_cards::Hit()
+{
+	cout << endl << endl;
+	cout << "Your current total is " << playerTotal << endl;
+	do {
+
+		cout << " do you want to Hit, or Stop?" << endl;
+		cout << "press h to hit or s to stop" << endl;
+		cout << "(enter only h/s) \a ";
+		cin.clear();
+		cin.ignore();
+		cin >> hit;
+	} while (hit != 'h' && hit != 's');
+
+	//cin >> hit;
+	// start hit
+	while (hit == 'h')
+	{
+		//player Random
+		while (cflag != 1)
+		{
+			rand();
+			srand(time(0));
+			newCard = (rand() % 51) + 1;
+			deck_position = newCard;
+
+			if (!card[deck_position].dealt)
+			{
+				card[deck_position].dealt = true;
+				cflag = 1;
+			}
+			tempCard = newCard;
+			count = count + 1;
+		}
+		cflag = 0;
+
+		playerTotal = playerTotal + card[newCard].card_value;
+		cout << playerTotal << endl;
+		// check for bust
+		if (playerTotal > 21)
+		{
+			cout << endl << endl;
+			cout << "You have gone over 21, you busted!" << endl;
+			bust = true;
+			hit = 's';
+		}
+		else
+		{
+			cout << endl << endl;
+
+			cout << "Your hit card is a " << card[tempCard].card_name << " of " << card[tempCard].card_type << " the card value is " << card[tempCard].card_value << endl;
+			do {
+				cout << "Your current total is " << playerTotal << endl;
+				cout << " do you want to Hit, or Stop?" << endl;
+				cout << "press h to hit or s to stop" << endl;
+				cout << "(enter only h/s) \a ";
+				cin.clear();
+				cin.ignore();
+				cin >> hit;
+			} while (hit != 'h' && hit != 's');
+
+			if (hit != 'h')
+			{
+				if (bust == true)
+				{
+					dealerResult = true;
+					cout << "you lost!!!";
+				}
+				else
+				{
+					play_cards::checkDealer();
+				}
+			}
+		}//while hit loop
+
+		if (bust == true)
+		{
+			dealerResult = true;
+			cout << endl << endl;
+			cout << "you lost!!!";
+		}
+		/*	else
+		{
+		//player Random
+		while (cflag != 1)
+		{
+		rand();
+		srand(time(0));
+		newCard = (rand() % 51) + 1;
+		deck_position = newCard;
+
+		if (!card[deck_position].dealt)
+		{
+		card[deck_position].dealt = true;
+		cflag = 1;
+		}
+		tempCard = newCard;
+		count = count + 1;
+		}
+		cflag = 0;
+		cout <<endl<< endl;
+		playerTotal = playerTotal + card[newCard].card_value;
+		cout << "Your hit card is a " << card[tempCard].card_name << " of " << card[tempCard].card_type << " the card value is " << card[tempCard].card_value << endl;
+		cout <<endl<< endl;
+		cout << "Your current total is " << playerTotal << " do you want to Hit, or Stop? press h to hit or s to stop" << endl;
+		cin >> hit;
+		}*/
+	}// end of hit
+	play_cards::checkDealer();
+}
+
+void play_cards::checkDealer()
+{
+	while (cflag != 1)
+	{
+		rand();
+		srand(time(0));
+		newDCard = (rand() % 51) + 1;
+		deck_position = newDCard;
+		if (!card[deck_position].dealt)
+		{
+			card[deck_position].dealt = true;
+			cflag = 1;
+		}
+		tempDCard = newDCard;
+		count = count + 1;
+	}
+	cflag = 0;
+	cout << endl << endl;
+	cout << "Lucille  his second card... it's a " << card[tempDCard].card_name << " of " << card[tempDCard].card_type
+		<< " s  with the value of " << card[tempDCard].card_value << endl;
+
+	while (dealerTotal <= 17)
+	{
+		while (cflag != 1)
+		{
+			rand();
+			srand(time(0));
+			newDCard = (rand() % 51) + 1;
+			deck_position = newDCard;
+			if (!card[deck_position].dealt)
+			{
+				card[deck_position].dealt = true;
+				cflag = 1;
+			}
+			tempDCard = newDCard;
+			count = count + 1;
+		}
+		cflag = 0;
+		cout << endl << endl;
+		cout << "Lucille draws a new card: " << "a " << card[newDCard].card_name << " of "
+			<< card[newDCard].card_type << "s" << endl;
+		dealerTotal = dealerTotal + card[newDCard].card_value;
+	}
+	if (dealerTotal>21)
+	{
+		dbust = true;
+	}
+	cout << endl;
+	cout << "Here's the score..." << endl;
+	cout << "The player's total: " << playerTotal << " Lucille's total: " << dealerTotal << endl;
+}
